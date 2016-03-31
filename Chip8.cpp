@@ -1,5 +1,39 @@
 #include "Chip8.h"
 
+void Chip8::DumpStatus()
+{
+    DumpMemory();
+    DumpResgisters();
+    DumpStack();
+}
+
+void Chip8::DumpMemory() 
+{ 
+    printf("\nMEMORY STATUS: \n");
+    memory.DumpFontSet(); 
+    memory.Dump(); 
+}
+
+void Chip8::DumpResgisters()
+{
+    printf("\nREGISTERS STATUS: \n");
+    printf("V1  V2  V3  V4  V5  V6  V7  V8  V9  VA  VB  VC  VD  VF\n");
+    for(auto i=0;i<16;++i)
+    {
+        printf("%2X   ", V[i]);
+    }
+}
+
+void Chip8::DumpStack()
+{
+    printf("\nSTACK STATUS: \n");
+    for(auto i=0;i<16;++i)
+    {
+        printf("%2X ", stack[i]);
+        if ((i + 1) % 4 == 0) { printf("\n"); }
+    }
+}
+
 void Chip8::UpdateTimers()
 {
     if(delay_timer > 0) --delay_timer;

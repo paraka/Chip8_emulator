@@ -17,9 +17,9 @@ public:
 
     bool LoadROM(const char *filename) { return (processor.LoadROM(filename)); }
 
-    void DumpMemory()
+    void Dump()
     {
-        processor.DumpMemory();
+        processor.DumpStatus();
     }
 
 private:
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     if(!emu.LoadROM(argv[1]))       
         return 1;
 
-    emu.DumpMemory();
+    emu.Dump();
     printf("Starting emulation...\n");
 
     return 0;

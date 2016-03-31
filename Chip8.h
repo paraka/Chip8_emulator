@@ -23,10 +23,13 @@ public:
     Chip8 & operator=(const Chip8 &) = delete;
 
     bool LoadROM(const char *filename) { return (memory.loadAppInMemory(filename)); }
-    void DumpMemory() { memory.DumpFontSet(); memory.Dump(); }
+    void DumpStatus();
     void RunCicle();
 
 private:
+    void DumpMemory();
+    void DumpResgisters();
+    void DumpStack(); 
     void UpdateTimers();
 
 public:
