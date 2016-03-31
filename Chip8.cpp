@@ -196,20 +196,30 @@ void Chip8::RunCicle()
                      // of 8bit rows that need to be drawn. 
                      // If N is greater than 1, second line continues at position VX, VY+1, and so on.
         {
+            // http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
             uint16_t x = V[(opcode & 0x0F00) >> 8];
             uint16_t y = V[(opcode & 0x00F0) >> 4];
             uint16_t rows = opcode & 0x000F;
             uint16_t pixel = 0;
+
+            V[0xF] = 0;
+            // Loop over each row
             for (auto yl=0; yl<y; yl++)
             {
+                // Fetch the pixel value from the memory starting at location I
                 pixel = memory.Read(I + yl);
-                for (auto xl=0; xl<x; xl++)
+                // Loop over 8 bits of one row
+                for (auto xl=0; xl<8; xl++)
                 {
+                    // Check if the current evaluated pixel is set to 1
+                    // (note that 0x80 >> xline scan through the byte, one bit at the time)
                     if ((pixel & (0x80 >> xl)) != 0)
                     {
-                        // TODO: This generates a SIGSEV: FIX IT
-                        //(display[(x + xl + ((y + yl) * 64))] == 1) ? V[0xF] = 1 : V[0xF] = 0;
-                        //display[x + xl + ((y + yl) * 64)] ^= 1;
+                        // Check if the pixel on the display is set to 1. 
+                        // If it is set, we need to register the collision by setting the VF register
+                        if (display[(x + xl + ((y + yl) * 64))] == 1) V[0xF] = 1;
+                        // Set the pixel value by using XOR
+                        display[x + xl + ((y + yl) * 64)] ^= 1;
                     }
                 }
             }
