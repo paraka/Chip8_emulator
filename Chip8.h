@@ -32,6 +32,12 @@ private:
     void DumpStack(); 
     void UpdateTimers();
 
+    // Opcode operations stuff
+    void ClearScreen();
+    inline void RestorePCFromStack();
+    inline void SavePCIntoTheStack();
+    inline void JumpToAddress(uint16_t address);
+
 public:
     bool drawF;
 

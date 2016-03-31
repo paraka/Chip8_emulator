@@ -1,5 +1,9 @@
 #include "Chip8.h"
 
+#ifdef DEBUG
+#include "Debug.h"
+#endif
+
 namespace
 {
     // Display resolution is 64×32 pixels, and color is monochrome.
@@ -22,6 +26,20 @@ public:
         processor.DumpStatus();
     }
 
+#ifdef DEBUG
+    void Debug()
+    {
+        int key = 0;
+        do
+        {
+            key = getche();
+            Dump();
+            if (key == 0x20)
+                processor.RunCicle();
+        } while (key == 0x20);
+    }
+#endif
+
 private:
     Chip8 processor;
 };
@@ -41,6 +59,10 @@ int main(int argc, char *argv[])
 
     emu.Dump();
     printf("Starting emulation...\n");
+
+#ifdef DEBUG
+    emu.Debug();
+#endif
 
     return 0;
 }
