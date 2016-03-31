@@ -4,8 +4,6 @@
 #include <termios.h>
 #include <stdio.h>
 
-#ifdef DEBUG
-
 static struct termios old, cur;
 
 /* Initialize new terminal i/o settings */
@@ -45,7 +43,5 @@ char getche(void)
 {
     return getch_(1);
 }
-
-#endif
 
 #endif // _DEBUG_H_
