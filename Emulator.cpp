@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
 #include <unistd.h>
 
 #include "Chip8.h"
@@ -7,17 +6,6 @@
 #ifdef DEBUG
 #include "Debug.h"
 #endif
-
-namespace
-{
-    // Display resolution is 64×32 pixels, and color is monochrome.
-    static const uint32_t SCREEN_WIDTH = 64;
-    static const uint32_t SCREEN_HEIGHT = 32;
-    //static constexpr uint32_t display_width = SCREEN_WIDTH * 10;
-    //static constexpr uint32_t display_height = SCREEN_HEIGHT * 10;
-    static uint32_t display_width = SCREEN_WIDTH * 10;
-    static uint32_t display_height = SCREEN_HEIGHT * 10;
-}
 
 class Graphics
 {
@@ -33,12 +21,14 @@ public:
 
     ~Graphics() = default;
 
+private:
     void Init()
     {
         SDL_Init(SDL_INIT_EVERYTHING);
-        window = SDL_CreateWindow("CHIP-8 Emulator",
+        window = SDL_CreateWindow("Yast Another Chip8 Emulator",
                                      SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                     display_height, display_width, SDL_WINDOW_SHOWN);
+                                     display_width, display_height, SDL_WINDOW_SHOWN);
+
         if (window == NULL) 
         {
             SDL_Quit();
@@ -61,6 +51,14 @@ public:
             SDL_Quit();
             exit(1);
         }
+    }
+
+    void CleanUp()
+    {
+        SDL_DestroyWindow(window);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyTexture(texture);
+        SDL_Quit();
     }
 
     void Updatekey(SDL_KeyboardEvent* e, uint32_t val)
@@ -121,56 +119,46 @@ public:
         }
     }
 
-    void reshape(SDL_Window *w, int width, int height) 
-    {
-        glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, width, 0, height, -1, 1);
-        glMatrixMode(GL_MODELVIEW);
-        glViewport(0, 0, width, height);
-
-        display_width = width;
-        display_height = height;
-    }
-
-    void resize(SDL_WindowEvent* e)
-    {
-        if (e->windowID == SDL_GetWindowID(window)) 
-        {
-            SDL_SetWindowSize(window, e->data1, e->data2);
-            reshape(window, e->data1, e->data2);
-        }
-    }
-
     void expand_screen(unsigned char* from, uint32_t * to)
     {
         for (int i = 0; i < 2048; i++)
             to[i] = (from[i]) ? -1 : 0;
     }
 
+    // Draw into the emulator window
+    void renderTexture()
+    {
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+    }
+
+    void updatePixelsWithCPUData()
+    {
+        void *pixels = NULL;
+        int pitch = 0;
+        SDL_LockTexture(texture, NULL, &pixels, &pitch);
+        expand_screen(chip8.display, (uint32_t *) pixels);
+        SDL_UnlockTexture(texture);
+    }
+
     void display()
     {
         chip8.RunCicle();
 
+        int timerFps = SDL_GetTicks();
         if (chip8.drawF)
         {
-            void*   pixels;
-            int     pitch;
-
-            /* Update SDL Texture with current data in CPU. */
-            SDL_LockTexture(texture, NULL, &pixels, &pitch);
-            expand_screen(chip8.display, (uint32_t *) pixels);
-            SDL_UnlockTexture(texture);
-
-            /* Render the texture. */
-            SDL_RenderClear(renderer);
-            SDL_RenderCopy(renderer, texture, NULL, NULL);
-            SDL_RenderPresent(renderer);
+            updatePixelsWithCPUData();
+            timerFps = SDL_GetTicks() - timerFps;
+            if (timerFps < 1000 / FRAMES_PER_SECOND)
+                SDL_Delay((1000 / FRAMES_PER_SECOND) - timerFps);
+            renderTexture();
             chip8.drawF = false;
         }
     }
 
+public:
     void mainLoop()
     {
         bool running = true;
@@ -189,22 +177,29 @@ public:
                     switch (e.window.event)
                     {
                         case SDL_WINDOWEVENT_EXPOSED: break;
-                        case SDL_WINDOWEVENT_RESIZED: resize(&e.window); break;
+                        case SDL_WINDOWEVENT_RESIZED: break;
                     }
                 }
             }
             display();
         }
-
-        SDL_Quit();
+        CleanUp();
     }
 
 private:
     SDL_Window *window;
-    SDL_GLContext glcontext;
-    SDL_Renderer* renderer;
-    SDL_Texture* texture;
+    SDL_Renderer *renderer;
+    SDL_Texture *texture;
     Chip8 & chip8;
+
+private:
+    // Display resolution is 64×32 pixels, and color is monochrome.
+    static const uint32_t SCREEN_WIDTH = 64;
+    static const uint32_t SCREEN_HEIGHT = 32;
+    static const uint32_t SCALE_FACTOR = 10;
+    static constexpr uint32_t display_width = SCREEN_WIDTH * SCALE_FACTOR;
+    static constexpr uint32_t display_height = SCREEN_HEIGHT * SCALE_FACTOR;
+    static const uint32_t FRAMES_PER_SECOND = 60;
 };
 
 class Emulator
@@ -257,7 +252,10 @@ int main(int argc, char *argv[])
     if(!emu.LoadROM(argv[1]))       
         return 1;
 
+#ifdef DEBUG
     emu.Dump();
+#endif
+
     printf("Starting emulation...\n");
 
 #ifdef DEBUG

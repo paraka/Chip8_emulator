@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <cstdint>
+#include <time.h>
 #include "Memory.h"
 
 class Chip8
@@ -15,6 +16,8 @@ public:
              I(0), sp(0),
              delay_timer(0), sound_timer(0) 
              {
+                 // init seed for rand()
+                 srand(time(NULL));
              } 
     
     ~Chip8() = default;
