@@ -270,7 +270,7 @@ void Chip8::RunCicle()
                     break;
                 case 0x0029: // 0xFX29: Sets I to the location of the sprite for the character in VX. 
                              // Characters 0-F (in hexadecimal) are represented by a 4x5 font.
-                    I = V[(opcode & 0x0F00) >> 8] * 0.5;
+                    I = V[(opcode & 0x0F00) >> 8] * 0x5;
                     pc += 2;
                     break;
                 case 0x0033: // 0xFX33: Stores the Binary-coded decimal representation of VX, with the most significant 
