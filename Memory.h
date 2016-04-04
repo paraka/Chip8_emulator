@@ -2,6 +2,7 @@
 #define _MEMORY_H_
 
 #include <stdio.h>
+#include <memory>
 
 /* Memory Map:
 +---------------+= 0xFFF (4095) End of Chip-8 RAM
@@ -85,17 +86,18 @@ public:
         rewind(pFile);
         printf("Filesize: %d\n", (int)lSize);
 
-        char * buffer = new char[sizeof(char) * lSize];
+        using BufferPtr = std::unique_ptr<char>;
+        BufferPtr buffer(new char[sizeof(char) * lSize]);
         if (!buffer) return false;
 
-        size_t result = fread (buffer, 1, lSize, pFile);
+        size_t result = fread (buffer.get(), 1, lSize, pFile);
         if (result != lSize) return false;
 
         bool ret = true;
         if ((B-BASE_START) > lSize)
         {
             for(int i = 0; i < lSize; ++i)
-                memory[i + BASE_START] = buffer[i];
+                memory[i + BASE_START] = buffer.get()[i];
         }
         else
         {
@@ -104,7 +106,6 @@ public:
         }
 
         fclose(pFile);
-        delete [] buffer;
 
         return ret;
     }
