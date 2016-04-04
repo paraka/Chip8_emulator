@@ -41,8 +41,8 @@ void Chip8::UpdateTimers()
 
     if(sound_timer > 0)
     {
-        if(sound_timer == 1) printf("BEEP!\n");
-        --sound_timer;
+        if (--sound_timer == 0) beeper.StopBeep();
+        else beeper.StartBeep();
     }
 }
 

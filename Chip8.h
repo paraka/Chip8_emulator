@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <cstdint>
 #include <time.h>
+#include "Beep.h"
 #include "Memory.h"
 
 class Chip8
@@ -84,6 +85,9 @@ private:
     //Chip-8 provides 2 timers, a delay timer and a sound timer.
     unsigned char delay_timer;
     unsigned char sound_timer;
+
+    //To make beep
+    Beep beeper;
 };
 
 #endif // _CHIP8_H_
