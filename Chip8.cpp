@@ -11,7 +11,6 @@ void Chip8::DumpStatus()
 void Chip8::DumpMemory() 
 { 
     printf("\nMEMORY STATUS: \n");
-    memory.DumpFontSet(); 
     memory.Dump(); 
 }
 
@@ -200,10 +199,9 @@ void Chip8::RunCicle()
                      // of 8bit rows that need to be drawn. 
                      // If N is greater than 1, second line continues at position VX, VY+1, and so on.
         {
-            uint16_t x = V[(opcode & 0x0F00) >> 8];
-            uint16_t y = V[(opcode & 0x00F0) >> 4];
-            uint16_t rows = opcode & 0x000F;
-            uint16_t pixel = 0;
+            uint8_t x = V[(opcode & 0x0F00) >> 8];
+            uint8_t y = V[(opcode & 0x00F0) >> 4];
+            uint8_t rows = opcode & 0x000F;
             V[0xF] = 0;
             for (auto j=0; j<rows; j++)
             {

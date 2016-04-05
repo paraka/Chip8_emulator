@@ -91,18 +91,9 @@ public:
         return true;
     }
 
-    void DumpFontSet()
-    {
-        for (auto i=0; i<RESERVED; ++i)
-        {
-            printf("%2X ", memory[i]);
-            if ((i + 1) % 5 == 0) { printf("\n"); }
-        }
-    }
-
     void Dump()
     {
-        for (auto i=BASE_START; i<B; ++i)
+        for (auto i=0; i<B; ++i)
         {
             printf("%2X ", memory[i]);
             if ((i + 1) % 16 == 0) { printf("\n"); }
@@ -120,8 +111,6 @@ private:
     }
                             
 private:
-    static const int RESERVED = 80;
-    static const int BASE_START = 512; // 0x200
     uint8_t memory[B]; 
 };
 
