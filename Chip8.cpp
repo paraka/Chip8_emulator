@@ -18,7 +18,7 @@ void Chip8::DumpMemory()
 void Chip8::DumpResgisters()
 {
     printf("\nREGISTERS STATUS: \n");
-    printf("V1  V2  V3  V4  V5  V6  V7  V8  V9  VA  VB  VC  VD  VF\n");
+    printf("V0  V1  V2  V3  V4  V5  V6  V7  V8  V9  VA  VB  VC  VD  VE  VF\n");
     for(auto i=0;i<16;++i)
     {
         printf("%2X  ", V[i]);
@@ -207,7 +207,7 @@ void Chip8::RunCicle()
             V[0xF] = 0;
             for (auto j=0; j<rows; j++)
             {
-                uint16_t sprite = memory.Read(I + j);
+                uint8_t sprite = memory.Read(I + j);
                 for (auto i=0; i<8; i++)
                 {
                     int px = (x + i) & 63;

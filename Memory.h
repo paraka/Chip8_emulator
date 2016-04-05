@@ -2,7 +2,6 @@
 #define _MEMORY_H_
 
 #include <stdio.h>
-#include <memory>
 
 /* Memory Map:
 +---------------+= 0xFFF (4095) End of Chip-8 RAM
@@ -33,7 +32,7 @@ namespace
 {
     // 16 x 5 
     // http://devernay.free.fr/hacks/chip8/C8TECH10.HTM -> DISPLAY
-    unsigned char chip8_fontset[80] =
+    static constexpr unsigned char chip8_fontset[] = 
     {
         0xF0, 0x90, 0x90, 0x90, 0xF0, //0
         0x20, 0x60, 0x20, 0x20, 0x70, //1
@@ -52,7 +51,7 @@ namespace
         0xF0, 0x80, 0xF0, 0x80, 0xF0, //E
         0xF0, 0x80, 0xF0, 0x80, 0x80  //F
     };
-}
+} // namespace
 
 template <uint32_t B>
 class Memory
@@ -81,33 +80,15 @@ public:
         FILE * pFile = fopen(filename, "rb");
         if (!pFile) return false;
 
-        fseek(pFile , 0 , SEEK_END);
-        long lSize = ftell(pFile);
-        rewind(pFile);
-        printf("Filesize: %d\n", (int)lSize);
+        fseek(pFile, 0, SEEK_END);
+        int length = ftell(pFile);
+        fseek(pFile, 0, SEEK_SET);
+        printf("Filesize: %d\n", length);
 
-        using BufferPtr = std::unique_ptr<char>;
-        BufferPtr buffer(new char[sizeof(char) * lSize]);
-        if (!buffer) return false;
-
-        size_t result = fread (buffer.get(), 1, lSize, pFile);
-        if (result != lSize) return false;
-
-        bool ret = true;
-        if ((B-BASE_START) > lSize)
-        {
-            for(int i = 0; i < lSize; ++i)
-                memory[i + BASE_START] = buffer.get()[i];
-        }
-        else
-        {
-            printf("Error: ROM too big for memory");
-            ret = false;
-        }
-
+        fread (memory + 0x200, length, 1, pFile);
         fclose(pFile);
 
-        return ret;
+        return true;
     }
 
     void DumpFontSet()
@@ -135,10 +116,7 @@ private:
 
     void LoadFontSet()
     {
-        for (auto i=0; i<RESERVED; ++i)
-        {
-            Write(i, chip8_fontset[i]);
-        }
+        memcpy(memory, chip8_fontset, 80);
     }
                             
 private:
