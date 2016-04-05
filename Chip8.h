@@ -52,7 +52,7 @@ public:
     // 4   5   6   D
     // 7   8   9   E
     // A   0   B   F
-    unsigned char keyboard[16];
+    uint8_t keyboard[16];
 
 private:
     // program counter
@@ -69,7 +69,7 @@ private:
     // There is also a 16-bit register called I. 
     // This register is generally used to store memory addresses, 
     // so only the lowest (rightmost) 12 bits are usually used.
-    unsigned char V[16]; 
+    uint8_t V[16]; 
 
     // The stack is an array of 16 16-bit values, used to store the address 
     // that the interpreter shoud return to when finished with a subroutine. 
@@ -83,8 +83,8 @@ private:
     Memory<4096> memory;
 
     //Chip-8 provides 2 timers, a delay timer and a sound timer.
-    unsigned char delay_timer;
-    unsigned char sound_timer;
+    uint8_t delay_timer;
+    uint8_t sound_timer;
 
     //To make beep
     Beep beeper;

@@ -21,8 +21,12 @@ void Chip8::DumpResgisters()
     printf("V1  V2  V3  V4  V5  V6  V7  V8  V9  VA  VB  VC  VD  VF\n");
     for(auto i=0;i<16;++i)
     {
-        printf("%2X   ", V[i]);
+        printf("%2X  ", V[i]);
     }
+    printf("\n");
+    printf("I: %4X\n", I);
+    printf("PC: %4X\n", pc);
+    printf("SP: %4X\n", sp);
 }
 
 void Chip8::DumpStack()
@@ -146,13 +150,13 @@ void Chip8::RunCicle()
                     pc += 2;
                     break;
                 case 0x0004: // 0x8XY4: Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.
+                    V[0xF] = (0xFF - V[(opcode & 0x0F00) >> 8]) < V[(opcode & 0x00F0) >> 4];
                     V[(opcode & 0x0F00) >> 8] += V[(opcode & 0x00F0) >> 4];
-                    (0xFF - V[(opcode & 0x0F00) >> 8]) < V[(opcode & 0x00F0) >> 4] ? V[0xF] = 1 : V[0xF] = 0;
                     pc += 2;
                     break;
                 case 0x0005: // 0x8XY5: VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
+                    V[0xF] = V[(opcode & 0x0F00) >> 8] < V[(opcode & 0x00F0) >> 4]; 
                     V[(opcode & 0x0F00) >> 8] -= V[(opcode & 0x00F0) >> 4];
-                    V[(opcode & 0x0F00) >> 8] < V[(opcode & 0x00F0) >> 4] ? V[0xF] = 1 : V[0xF] = 0;
                     pc += 2;
                     break;
                 case 0x0006: // 0x8XY6: Shifts VX right by one. VF is set to the value of the least significant bit of VX before the shift.
@@ -161,7 +165,7 @@ void Chip8::RunCicle()
                     pc += 2;
                     break;
                 case 0x0007: // 0x8XY7: Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
-                    V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4] ? V[0xF] = 1 : V[0xF] = 0;
+                    V[0xF] = V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4];
                     V[(opcode & 0x0F00) >> 8] = V[(opcode & 0x00F0) >> 4] - V[(opcode & 0x0F00) >> 8];
                     pc += 2;
                     break;
@@ -264,7 +268,7 @@ void Chip8::RunCicle()
                 case 0x001E: // 0xFX1E: Adds VX to I.
                     // VF is set to 1 when range overflow (I+VX>0xFFF), and 0 when there isn't. 
                     // This is undocumented feature of the CHIP-8 and used by Spacefight 2091! game.
-                    (I + V[(opcode & 0x0F00) >> 8]) > 0xFFF ? V[0xF] = 1 : V[0xF] = 0;
+                    V[0xF] = (I + V[(opcode & 0x0F00) >> 8]) > 0xFFF;
                     I += V[(opcode & 0x0F00) >> 8];
                     pc += 2;
                     break;
@@ -281,7 +285,7 @@ void Chip8::RunCicle()
                              // the tens digit at location I+1, and the ones digit at location I+2.)
                     memory.Write(I, V[(opcode & 0x0F00) >> 8] / 100);
                     memory.Write(I + 1, (V[(opcode & 0x0F00) >> 8] / 10) % 10);
-                    memory.Write(I + 2, (V[(opcode & 0x0F00) >> 8] % 100) % 10);
+                    memory.Write(I + 2, V[(opcode & 0x0F00) >> 8] % 10);
                     pc += 2;
                     break;
                 case 0x0055: // 0xFX55: Stores V0 to VX (including VX) in memory starting at address I.

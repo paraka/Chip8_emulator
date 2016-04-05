@@ -144,7 +144,7 @@ private:
 private:
     static const int RESERVED = 80;
     static const int BASE_START = 512; // 0x200
-    unsigned char memory[B]; 
+    uint8_t memory[B]; 
 };
 
 #endif // _MEMORY_H_
