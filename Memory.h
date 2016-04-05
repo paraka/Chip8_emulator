@@ -63,12 +63,12 @@ public:
         LoadFontSet();
     }
    
-    void Write(int address, uint16_t value)
+    void Write(int address, uint8_t value)
     {
         memory[address] = value;
     }
 
-    uint16_t Read(int address)
+    uint8_t Read(int address)
     {
         return(memory[address]);
     }
@@ -128,8 +128,8 @@ public:
         }
     }
 
-    uint16_t operator[](std::size_t idx)       { return memory[idx]; };
-    const uint16_t operator[](std::size_t idx) const { return memory[idx]; };
+    uint8_t operator[](int idx)       { return memory[idx]; };
+    const uint8_t operator[](int idx) const { return memory[idx]; };
 
 private:
 
