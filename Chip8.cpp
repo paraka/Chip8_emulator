@@ -257,7 +257,7 @@ void Chip8::RunCicle()
                     {
                         if (keyboard[i] != 0)
                         {
-                            V[(opcode & 0x0F00) >> 8] = keyboard[i];
+                            V[(opcode & 0x0F00) >> 8] = i;
                             pressed = true;
                         }
                     }

@@ -12,7 +12,7 @@ public:
 private:
     void Init();
     void CleanUp();
-    void Updatekey(SDL_KeyboardEvent *e, uint32_t val);
+    void Updatekey(SDL_KeyboardEvent *e, uint8_t val);
     void expandScreen(unsigned char *from, uint32_t *to);
     // Draw into the emulator window
     void renderTexture();

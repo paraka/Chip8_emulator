@@ -51,7 +51,7 @@ void Graphics::CleanUp()
     SDL_Quit();
 }
 
-void Graphics::Updatekey(SDL_KeyboardEvent *e, uint32_t val)
+void Graphics::Updatekey(SDL_KeyboardEvent *e, uint8_t val)
 {
     switch (e->keysym.sym)
     {
