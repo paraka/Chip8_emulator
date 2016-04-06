@@ -55,57 +55,25 @@ void Graphics::Updatekey(SDL_KeyboardEvent *e, uint32_t val)
 {
     switch (e->keysym.sym)
     {
-        case SDLK_1:
-            chip8.keyboard[0x1] = val;
-            break;
-        case SDLK_2:
-            chip8.keyboard[0x2] = val;
-            break;
-        case SDLK_3:
-            chip8.keyboard[0x3] = val;
-            break;
-        case SDLK_4:
-            chip8.keyboard[0xC] = val;
-            break;
+        case SDLK_1: chip8.keyboard[0x1] = val; break;
+        case SDLK_2: chip8.keyboard[0x2] = val; break;
+        case SDLK_3: chip8.keyboard[0x3] = val; break;
+        case SDLK_4: chip8.keyboard[0xC] = val; break;
 
-        case SDLK_q:
-            chip8.keyboard[0x4] = val;
-            break;
-        case SDLK_w:
-            chip8.keyboard[0x5] = val;
-            break;
-        case SDLK_e:
-            chip8.keyboard[0x6] = val;
-            break;
-        case SDLK_r:
-            chip8.keyboard[0xD] = val;
-            break;
+        case SDLK_q: chip8.keyboard[0x4] = val; break;
+        case SDLK_w: chip8.keyboard[0x5] = val; break;
+        case SDLK_e: chip8.keyboard[0x6] = val; break;
+        case SDLK_r: chip8.keyboard[0xD] = val; break;
 
-        case SDLK_a:
-            chip8.keyboard[0x7] = val;
-            break;
-        case SDLK_s:
-            chip8.keyboard[0x8] = val;
-            break;
-        case SDLK_d:
-            chip8.keyboard[0x9] = val;
-            break;
-        case SDLK_f:
-            chip8.keyboard[0xE] = val;
-            break;
+        case SDLK_a: chip8.keyboard[0x7] = val; break;
+        case SDLK_s: chip8.keyboard[0x8] = val; break;
+        case SDLK_d: chip8.keyboard[0x9] = val; break;
+        case SDLK_f: chip8.keyboard[0xE] = val; break;
 
-        case SDLK_z:
-            chip8.keyboard[0xA] = val;
-            break;
-        case SDLK_x:
-            chip8.keyboard[0x0] = val;
-            break;
-        case SDLK_c:
-            chip8.keyboard[0xB] = val;
-            break;
-        case SDLK_v:
-            chip8.keyboard[0xF] = val;
-            break;
+        case SDLK_z: chip8.keyboard[0xA] = val; break;
+        case SDLK_x: chip8.keyboard[0x0] = val; break;
+        case SDLK_c: chip8.keyboard[0xB] = val; break;
+        case SDLK_v: chip8.keyboard[0xF] = val; break;
     }
 }
 
