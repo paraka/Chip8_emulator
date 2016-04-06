@@ -298,13 +298,13 @@ void Chip8::RunCicle()
                     break;
                 case 0x0055: // 0xFX55: Stores V0 to VX (including VX) in memory starting at address I.
                              // On the original interpreter, when the operation is done, I=I+X+1. On current implementations, I is left unchanged.
-                    for (auto i=0; i<= V[(opcode & 0x0F00) >> 8]; ++i) memory.Write(I+i, V[i]);
+                    for (auto i=0; i<= ((opcode & 0x0F00) >> 8); ++i) memory.Write(I+i, V[i]);
                     I += ((opcode & 0x0F00) >> 8) + 1;
                     pc += 2;
                     break;
                 case 0x0065: // 0xFX65: Fills V0 to VX (including VX) with values from memory starting at address I.
                              // On the original interpreter, when the operation is done, I=I+X+1. On current implementations, I is left unchanged.
-                    for (auto i=0; i<= V[(opcode & 0x0F00) >> 8]; ++i) V[i] = memory.Read(I+i);
+                    for (auto i=0; i<= ((opcode & 0x0F00) >> 8); ++i) V[i] = memory.Read(I+i);
                     I += ((opcode & 0x0F00) >> 8) + 1;
                     pc += 2;
                     break;
