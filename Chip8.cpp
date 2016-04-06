@@ -6,6 +6,7 @@ void Chip8::DumpStatus()
     DumpMemory();
     DumpResgisters();
     DumpStack();
+    DumpDisplay();
 }
 
 void Chip8::DumpMemory() 
@@ -38,6 +39,16 @@ void Chip8::DumpStack()
     }
 }
 
+void Chip8::DumpDisplay()
+{
+    printf("\nDISPLAY STATUS: \n");
+    for(auto i=0;i<2048;++i)
+    {
+        printf("%X ", display[i]);
+        if ((i + 1) % 64 == 0) { printf("\n"); }
+    }
+}
+
 void Chip8::UpdateTimers()
 {
     if(delay_timer > 0) --delay_timer;
@@ -51,8 +62,7 @@ void Chip8::UpdateTimers()
 
 void Chip8::ClearScreen()
 {
-    for(int i = 0; i < 2048; ++i)
-        display[i] = 0x0;
+    memset(display, 0, 2048);
     drawF = true;
 }
 

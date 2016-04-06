@@ -34,6 +34,7 @@ private:
     void DumpMemory();
     void DumpResgisters();
     void DumpStack(); 
+    void DumpDisplay();
     void UpdateTimers();
 
     // Opcode operations stuff
