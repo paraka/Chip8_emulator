@@ -38,10 +38,42 @@ private:
     void UpdateTimers();
 
     // Opcode operations stuff
-    void ClearScreen();
-    inline void RestorePCFromStack();
-    inline void SavePCIntoTheStack();
-    inline void JumpToAddress(uint16_t address);
+    inline void decodeOpcode();
+    inline void clear();
+    inline void ret();
+    inline void jmp(uint16_t address);
+    inline void call(uint16_t address);
+    inline void jeq(uint8_t reg, uint8_t value);
+    inline void jneq(uint8_t reg, uint8_t value);
+    inline void jeqr(uint8_t reg1, uint8_t reg2);
+    inline void set(uint8_t reg, uint8_t value);
+    inline void add(uint8_t reg, uint8_t value);
+    inline void setr(uint8_t reg1, uint8_t reg2);
+    inline void Or(uint8_t reg1, uint8_t reg2);
+    inline void And(uint8_t reg1, uint8_t reg2);
+    inline void Xor(uint8_t reg1, uint8_t reg2);
+    inline void addr(uint8_t reg1, uint8_t reg2);
+    inline void sub(uint8_t reg1, uint8_t reg2);
+    inline void shr(uint8_t reg);
+    inline void subb(uint8_t reg1, uint8_t reg2);
+    inline void shl(uint8_t reg);
+    inline void jneqr(uint8_t reg1, uint8_t reg2);
+    inline void seti(uint16_t value);
+    inline void jumpv0(uint16_t address);
+    inline void Rand(uint8_t reg,uint8_t value);
+    inline void draw(uint8_t reg1, uint8_t reg2, uint8_t value);
+    inline void jkey(uint8_t reg);
+    inline void jnkey(uint8_t reg);
+    inline void getdelay(uint8_t reg);
+    inline void waitkey(uint8_t reg);
+    inline void setdelay(uint8_t reg);
+    inline void setsound(uint8_t reg);
+    inline void addi(uint8_t reg);
+    inline void spritei(uint8_t reg);
+    inline void bcd(uint8_t reg);
+    inline void push(uint8_t reg);
+    inline void pop(uint8_t reg);
+    inline void unknown(uint16_t opcode);
 
 public:
     bool drawF;
